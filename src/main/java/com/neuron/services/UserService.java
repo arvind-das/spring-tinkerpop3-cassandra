@@ -5,13 +5,11 @@ import com.neuron.domains.User;
 import com.thinkaurelius.titan.core.TitanFactory;
 import com.thinkaurelius.titan.core.TitanGraph;
 import org.apache.commons.configuration.BaseConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class UserService implements AutoCloseable{
 
-
-    Logger logger = LoggerFactory.getLogger(UserService.class);
     private TitanGraph titanGraph;
 
     public User saveUser(){
@@ -25,7 +23,7 @@ public class UserService implements AutoCloseable{
 
         titanGraph = TitanFactory.open(baseConfiguration);
         titanGraph.addVertex(user);
-        logger.debug("about to save user");
+
         titanGraph.newTransaction().commit();
 //        GraphTraversalSource graphTraversalSource = titanGraph.traversal();
 //        Vertex v1 = graphTraversalSource.V().has("name","Arvind").next();

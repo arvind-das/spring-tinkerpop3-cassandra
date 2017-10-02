@@ -2,9 +2,8 @@ package com.neuron.repositoryImpl;
 
 import com.neuron.domains.User;
 import com.neuron.repositories.UserRepository;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+
 public class UserRepositoryImpl implements UserRepository {
 
     @Override

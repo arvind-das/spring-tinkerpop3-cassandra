@@ -1,15 +1,29 @@
 group 'com.neuron'
 version '1.0-SNAPSHOT'
 
-ext {
-    springVersion = "4.3.11.RELEASE"
-}
+buildscript {
+    ext {
+        springVersion = "4.3.11.RELEASE"
+        springBootVersion = "1.5.1.RELEASE"
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies{
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
+    }
 
+
+}
 
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'application'
+apply plugin: 'org.springframework.boot'
 
 sourceCompatibility = 1.8
+
+mainClassName='com.neuron.App'
 
 repositories {
     mavenCentral()
@@ -17,11 +31,15 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile("org.springframework:spring-core:${springVersion}")
-    compile("org.springframework:spring-context:${springVersion}")
-    compile("org.springframework:spring-tx:${springVersion}")
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springBootVersion
+    compile("org.springframework.boot:spring-boot-devtools:${springBootVersion}")
     // https://mvnrepository.com/artifact/org.springframework.data/spring-data-commons
     compile group: 'org.springframework.data', name: 'spring-data-commons', version: '1.13.7.RELEASE'
+    // spring-boot-starter-thymeleaf
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: springBootVersion
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: springBootVersion
+    compile("org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}")
     // https://mvnrepository.com/artifact/org.apache.tinkerpop/gremlin-driver
     compile group: 'org.apache.tinkerpop', name: 'gremlin-driver', version: '3.0.1-incubating'
     // https://mvnrepository.com/artifact/org.apache.tinkerpop/gremlin-server
@@ -32,8 +50,16 @@ dependencies {
     // https://mvnrepository.com/artifact/org.reflections/reflections
     compile group: 'org.reflections', name: 'reflections', version: '0.9.11'
     // https://mvnrepository.com/artifact/com.thinkaurelius.titan/titan-cassandra
-    compile group: 'com.thinkaurelius.titan', name: 'titan-cassandra', version: '1.0.0'
+    compile (group: 'com.thinkaurelius.titan', name: 'titan-cassandra', version: '1.0.0'){
+        exclude group: 'org.slf4j'
+        exclude group: 'log4j'
+    }
 
     // https://mvnrepository.com/artifact/org.apache.tinkerpop/tinkerpop
     compile group: 'org.apache.tinkerpop', name: 'tinkerpop', version: '3.0.1-incubating', ext: 'pom'
 }
+def profile = "development"
+//systemProperty "spring.profiles.active", profile
+bootRun {
+    args = ["--spring.profiles.active="+profile]
+ }
